@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Income Tax Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Income Tax Calculator</h1>
+        <form id="taxForm">
+            <label for="income">Income:</label>
+            <input type="number" id="income" name="income" required><br><br>
+            
+            <label for="tuition">Tuition Fee (80C):</label>
+            <input type="number" id="tuition" name="tuition"><br><br>
+            
+            <label for="insurance">Life Insurance Premium (80C):</label>
+            <input type="number" id="insurance" name="insurance"><br><br>
+            
+            <label for="pf">Provident Fund/Superannuation Fund (80C):</label>
+            <input type="number" id="pf" name="pf"><br><br>
+            
+            <label for="fd">Fixed Deposit/Bonds (80C):</label>
+            <input type="number" id="fd" name="fd"><br><br>
+            
+            <label for="nsc">NSC (80C):</label>
+            <input type="number" id="nsc" name="nsc"><br><br>
+            
+            <label for="loan">Repayment of House Loan (80C):</label>
+            <input type="number" id="loan" name="loan"><br><br>
+            
+            <label for="mutual">Mutual Fund (80C):</label>
+            <input type="number" id="mutual" name="mutual"><br><br>
+            
+            <label for="stamp">Stamp Duty/Registration Fee of House (80C):</label>
+            <input type="number" id="stamp" name="stamp"><br><br>
+            
+            <label for="other">Other Investments (80C):</label>
+            <input type="number" id="other" name="other"><br><br>
+            
+            <button type="button" onclick="calculateTax()">Calculate Tax</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function old(t) {
+            let a, b, c;
+            let tcgain = 0; // Initialize tcgain here
+
+            if (t <= 500000)
+                a = 0;
+            else if (t > 500000 && t <= 750000)
+                a = 12500 + (t - 500000) * 0.1;
+            else if (t > 750000 && t <= 1000000)
+                a = 37500 + (t - 750000) * 0.15;
+            else if (t > 1000000 && t <= 1250000)
+                a = 75000 + (t - 1000000) * 0.20;
+            else if (t > 1250000 && t <= 1500000)
+                a = 125000 + (t - 1250000) * 0.25;
+            else
+                a = 187500 + (t - 1500000) * 0.30;
+
+            b = a + tcgain;
+            c = b + b * 0.04; // Education cess @ 4%
+            return c;
+        }
+
+        function calculateTax() {
+            // Get user input values
+            const income = parseFloat(document.getElementById('income').value);
+            const tuition = parseFloat(document.getElementById('tuition').value || 0);
+            const insurance = parseFloat(document.getElementById('insurance').value || 0);
+            const pf = parseFloat(document.getElementById('pf').value || 0);
+            const fd = parseFloat(document.getElementById('fd').value || 0);
+            const nsc = parseFloat(document.getElementById('nsc').value || 0);
+            const loan = parseFloat(document.getElementById('loan').value || 0);
+            const mutual = parseFloat(document.getElementById('mutual').value || 0);
+            const stamp = parseFloat(document.getElementById('stamp').value || 0);
+            const other = parseFloat(document.getElementById('other').value || 0);
+
+            // Calculate total deductions under 80C
+            const totalDeductions = tuition + insurance + pf + fd + nsc + loan + mutual + stamp + other;
+            
+            // Calculate taxable income after 80C deductions
+            const taxableIncome = income - Math.min(totalDeductions, 150000);
+
+            // Calculate tax using the JavaScript function
+            const tax = old(taxableIncome);
+
+            // Display the result
+            document.getElementById('result').innerHTML = "<h2>Result</h2>" +
+                "<p>Total Income: " + income + "</p>" +
+                "<p>Taxable Income after 80C deductions: " + taxableIncome + "</p>" +
+                "<p>Tax to be paid: " + tax + "</p>";
+        }
+    </script>
+</body>
+</html>
